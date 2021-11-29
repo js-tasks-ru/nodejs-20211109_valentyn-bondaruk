@@ -17,18 +17,15 @@ server.on('request', (req, res) => {
     case 'GET':
       readFileStream
           .on('error', (err) => {
-            if (err) {
-              if (pathname.includes('/')) {
-                res.statusCode = 400;
-                res.end('400');
-                return;
-              } else {
-                res.statusCode = 404;
-                res.end('404');
-                return;
-              }
+            if (err && pathname.includes('/')) {
+              res.statusCode = 400;
+              res.end('400');
+            } else {
+              res.statusCode = 404;
+              res.end('404');
             }
-
+          })
+          .on('finish', () => {
             res.statusCode = 200;
             res.end(data);
           })
